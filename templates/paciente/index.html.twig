@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %} {% block title %}Lista de Pacientes{% endblock %}
+{% block body %}
+<div class="container my-5">
+  <h1 class="text-center mb-4">Lista de Pacientes</h1>
+
+  <a href="{{ path('app_paciente_new') }}" class="btn btn-success mb-3"
+    >Registrar Nuevo Paciente</a
+  >
+
+  {% for message in app.flashes('success') %}
+  <div class="alert alert-success">{{ message }}</div>
+  {% endfor %} {% if pacientes is not empty %}
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>DNI</th>
+          <th>Fecha Nacimiento</th>
+          <th>Expediente</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for paciente in pacientes %}
+        <tr>
+          <td>{{ paciente.id }}</td>
+          <td>{{ paciente.nombre }}</td>
+          <td>{{ paciente.apellido }}</td>
+          <td>{{ paciente.dni }}</td>
+          <td>{{ paciente.fechaNacimiento|date('Y-m-d') }}</td>
+          <td>{{ paciente.numeroExpediente }}</td>
+          <td>
+            <a
+              href="{{ path('app_paciente_show', { id: paciente.id }) }}"
+              class="btn btn-sm btn-info me-1"
+              >Ver</a
+            >
+            <a
+              href="{{ path('app_paciente_edit', { id: paciente.id }) }}"
+              class="btn btn-sm btn-warning"
+              >Editar</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info text-center" role="alert">
+    No se encontraron pacientes registrados.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalle del Paciente{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Detalle del Paciente</h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Id</th>
+                            <td>{{ paciente.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <td>{{ paciente.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Apellido</th>
+                            <td>{{ paciente.apellido }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de Nacimiento</th>
+                            <td>{{ paciente.fechaNacimiento|date('Y-m-d') }}</td>
+                        </tr>
+                        <tr>
+                            <th>DNI</th>
+                            <td>{{ paciente.dni }}</td>
+                        </tr>
+                        <tr>
+                            <th>Número de Expediente</th>
+                            <td>{{ paciente.numeroExpediente }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de Registro</th>
+                            <td>{{ paciente.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Diagnóstico Principal</th>
+                            <td>{{ paciente.diagnosticoPrincipal ?: 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Observaciones</th>
+                            <td>{{ paciente.observaciones ?: 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dirección</th>
+                            <td>{{ paciente.direccion ?: 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Teléfono</th>
+                            <td>{{ paciente.telefono ?: 'N/A' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ paciente.email ?: 'N/A' }}</td>
+                        </tr>
+                        {% if paciente.mama %}
+                        <tr>
+                            <th>Mamá</th>
+                            <td>{{ paciente.mama.nombre }} {{ paciente.mama.apellido }} (DNI: {{ paciente.mama.dni }})</td>
+                        </tr>
+                        {% endif %}
+                        {% if paciente.papa %}
+                        <tr>
+                            <th>Papá</th>
+                            <td>{{ paciente.papa.nombre }} {{ paciente.papa.apellido }} (DNI: {{ paciente.papa.dni }})</td>
+                        </tr>
+                        {% endif %}
+                        {% if paciente.encargado %}
+                        <tr>
+                            <th>Encargado</th>
+                            <td>{{ paciente.encargado.nombre }} {{ paciente.encargado.apellido }} (DNI: {{ paciente.encargado.dni }})</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ path('app_paciente_edit', {'id': paciente.id}) }}" class="btn btn-warning">Editar</a>
+                    <a href="{{ path('app_paciente_index') }}" class="btn btn-info">Volver a la lista</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

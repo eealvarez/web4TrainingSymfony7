@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   database:
-    image: "mysql:latest"
+    image: "mysql:9.3.0"
     container_name: "${CONTAINER_NAME}"
     env_file: docker.env
     environment:

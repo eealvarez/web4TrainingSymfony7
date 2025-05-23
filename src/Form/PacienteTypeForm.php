@@ -36,7 +36,7 @@ class PacienteTypeForm extends AbstractType
                 'widget' => 'single_text', // Muestra un solo campo de texto para la fecha
                 'html5' => true, // Usa el input de fecha HTML5 para calendarios nativos
                 'help' => 'El paciente debe tener 13 años o menos.', // Ayuda visual para la validación de edad
-                // 'empty_data' => null,
+                'empty_data' => null,
 
 
             ])

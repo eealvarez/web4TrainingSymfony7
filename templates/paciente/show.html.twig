@@ -1,89 +1,136 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Detalle del Paciente{% endblock
+%} {% block body %}
+<div class="container my-5">
+  <h1 class="text-center mb-4">Detalle del Paciente</h1>
 
-{% block title %}Detalle del Paciente{% endblock %}
-
-{% block body %}
-    <div class="container my-5">
-        <h1 class="text-center mb-4">Detalle del Paciente</h1>
-
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <table class="table table-bordered">
-                    <tbody>
-                        <tr>
-                            <th>Id</th>
-                            <td>{{ paciente.id }}</td>
-                        </tr>
-                        <tr>
-                            <th>Nombre</th>
-                            <td>{{ paciente.nombre }}</td>
-                        </tr>
-                        <tr>
-                            <th>Apellido</th>
-                            <td>{{ paciente.apellido }}</td>
-                        </tr>
-                        <tr>
-                            <th>Fecha de Nacimiento</th>
-                            <td>{{ paciente.fechaNacimiento|date('Y-m-d') }}</td>
-                        </tr>
-                        <tr>
-                            <th>DNI</th>
-                            <td>{{ paciente.dni }}</td>
-                        </tr>
-                        <tr>
-                            <th>Número de Expediente</th>
-                            <td>{{ paciente.numeroExpediente }}</td>
-                        </tr>
-                        <tr>
-                            <th>Fecha de Registro</th>
-                            <td>{{ paciente.fechaRegistro|date('Y-m-d H:i:s') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Diagnóstico Principal</th>
-                            <td>{{ paciente.diagnosticoPrincipal ?: 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Observaciones</th>
-                            <td>{{ paciente.observaciones ?: 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Dirección</th>
-                            <td>{{ paciente.direccion ?: 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Teléfono</th>
-                            <td>{{ paciente.telefono ?: 'N/A' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Email</th>
-                            <td>{{ paciente.email ?: 'N/A' }}</td>
-                        </tr>
-                        {% if paciente.mama %}
-                        <tr>
-                            <th>Mamá</th>
-                            <td>{{ paciente.mama.nombre }} {{ paciente.mama.apellido }} (DNI: {{ paciente.mama.dni }})</td>
-                        </tr>
-                        {% endif %}
-                        {% if paciente.papa %}
-                        <tr>
-                            <th>Papá</th>
-                            <td>{{ paciente.papa.nombre }} {{ paciente.papa.apellido }} (DNI: {{ paciente.papa.dni }})</td>
-                        </tr>
-                        {% endif %}
-                        {% if paciente.encargado %}
-                        <tr>
-                            <th>Encargado</th>
-                            <td>{{ paciente.encargado.nombre }} {{ paciente.encargado.apellido }} (DNI: {{ paciente.encargado.dni }})</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-
-                <div class="d-flex justify-content-between mt-4">
-                    <a href="{{ path('app_paciente_edit', {'id': paciente.id}) }}" class="btn btn-warning">Editar</a>
-                    <a href="{{ path('app_paciente_index') }}" class="btn btn-info">Volver a la lista</a>
-                </div>
-            </div>
-        </div>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">Información del Paciente</h5>
+      <p>
+        <strong>Nombre:</strong> {{ paciente.nombre }} {{ paciente.apellido }}
+      </p>
+      <p>
+        <strong>Fecha de Nacimiento:</strong>
+        {{ paciente.fechaNacimiento|date('d/m/Y') }}
+      </p>
+      <p><strong>DNI:</strong> {{ paciente.dni }}</p>
+      <p>
+        <strong>Número de Expediente:</strong> {{ paciente.numeroExpediente }}
+      </p>
+      <p>
+        <strong>Diagnóstico Principal:</strong>
+        {{ paciente.diagnosticoPrincipal | nl2br }}
+      </p>
+      <p>
+        <strong>Observaciones:</strong> {{ paciente.observaciones | nl2br }}
+      </p>
     </div>
+  </div>
+
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+      <h5 class="card-title">Información de Contacto</h5>
+      <p>
+        <strong>Dirección:</strong>
+        {{ paciente.direccion|default('No especificada') }}
+      </p>
+      <p>
+        <strong>Teléfono:</strong>
+        {{ paciente.telefono|default('No especificado') }}
+      </p>
+      <p>
+        <strong>Email:</strong> {{ paciente.email|default('No especificado') }}
+      </p>
+    </div>
+  </div>
+
+  {% if paciente.mama or paciente.papa or paciente.encargado %}
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+      <h5 class="card-title">Información del Familiar</h5>
+      {% if paciente.mama %}
+      <h6>Mamá</h6>
+      <p>
+        <strong>Nombre:</strong> {{ paciente.mama.nombre }}
+        {{ paciente.mama.apellido }}
+      </p>
+      <p><strong>DNI:</strong> {{ paciente.mama.dni }}</p>
+      <p>
+        <strong>Ocupación:</strong>
+        {{ paciente.mama.ocupacion|default('No especificada') }}
+      </p>
+      <p>
+        <strong>Estado Civil:</strong>
+        {{ paciente.mama.estadoCivil|default('No especificado') }}
+      </p>
+      <p>
+        <strong>Teléfono:</strong>
+        {{ paciente.mama.telefono|default('No especificado') }}
+      </p>
+      <p>
+        <strong>Email:</strong>
+        {{ paciente.mama.email|default('No especificado') }}
+      </p>
+      {% elseif paciente.papa %}
+      <h6>Papá</h6>
+      <p>
+        <strong>Nombre:</strong> {{ paciente.papa.nombre }}
+        {{ paciente.papa.apellido }}
+      </p>
+      <p><strong>DNI:</strong> {{ paciente.papa.dni }}</p>
+      <p>
+        <strong>Ocupación:</strong>
+        {{ paciente.papa.ocupacion|default('No especificada') }}
+      </p>
+      <p>
+        <strong>Empresa de Trabajo:</strong>
+        {{ paciente.papa.empresaTrabajo|default('No especificada') }}
+      </p>
+      <p>
+        <strong>Teléfono:</strong>
+        {{ paciente.papa.telefono|default('No especificado') }}
+      </p>
+      <p>
+        <strong>Email:</strong>
+        {{ paciente.papa.email|default('No especificado') }}
+      </p>
+      {% elseif paciente.encargado %}
+      <h6>Encargado</h6>
+      <p>
+        <strong>Nombre:</strong> {{ paciente.encargado.nombre }}
+        {{ paciente.encargado.apellido }}
+      </p>
+      <p><strong>DNI:</strong> {{ paciente.encargado.dni }}</p>
+      <p>
+        <strong>Relación con el Paciente:</strong>
+        {{ paciente.encargado.relacionConPaciente }}
+      </p>
+      <p>
+        <strong>¿Es el Encargado Principal?:</strong> {% if
+        paciente.encargado.esPrincipal %}Sí{% else %}No{% endif %}
+      </p>
+      <p>
+        <strong>Teléfono:</strong>
+        {{ paciente.encargado.telefono|default('No especificado') }}
+      </p>
+      <p>
+        <strong>Email:</strong>
+        {{ paciente.encargado.email|default('No especificado') }}
+      </p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="d-grid gap-2 mt-4">
+    <a
+      href="{{ path('app_paciente_edit', { id: paciente.id }) }}"
+      class="btn btn-primary btn-lg"
+      >Editar Paciente</a
+    >
+    <a href="{{ path('app_paciente_index') }}" class="btn btn-secondary btn-lg"
+      >Volver a la lista</a
+    >
+  </div>
+</div>
 {% endblock %}

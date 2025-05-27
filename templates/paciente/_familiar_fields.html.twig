@@ -1,0 +1,175 @@
+{# templates/paciente/_familiar_fields.html.twig #} {# Familiares Existentes
+(selectores o edición directa) - Estos no van en pestañas #} {% if form.mama is
+defined and form.mama.vars.block_prefixes | last != 'entity' %} {# Si es un
+MamaType (edición directa), renderiza los campos individuales #}
+<div class="familiar-form-group border p-3 mb-3 rounded bg-white">
+  <h3>Datos de la Mamá (Editar)</h3>
+  {{ form_row(form.mama.nombre) }}
+  {{ form_row(form.mama.apellido) }}
+  {{ form_row(form.mama.fechaNacimiento) }}
+  {{ form_row(form.mama.dni) }}
+  {{ form_row(form.mama.direccion) }}
+  {{ form_row(form.mama.telefono) }}
+  {{ form_row(form.mama.email) }}
+  {{ form_row(form.mama.ocupacion) }}
+  {{ form_row(form.mama.estadoCivil) }}
+</div>
+{% elseif form.mama is defined and form.mama.vars.block_prefixes | last ==
+'entity' %} {# Si es un EntityType (selector), renderiza como un selector de
+entidad #}
+<div class="form-group mb-3">{{ form_row(form.mama) }}</div>
+{% endif %} {% if form.papa is defined and form.papa.vars.block_prefixes | last
+!= 'entity' %}
+<div class="familiar-form-group border p-3 mb-3 rounded bg-white">
+  <h3>Datos del Papá (Editar)</h3>
+  {{ form_row(form.papa.nombre) }}
+  {{ form_row(form.papa.apellido) }}
+  {{ form_row(form.papa.fechaNacimiento) }}
+  {{ form_row(form.papa.dni) }}
+  {{ form_row(form.papa.direccion) }}
+  {{ form_row(form.papa.telefono) }}
+  {{ form_row(form.papa.email) }}
+  {{ form_row(form.papa.ocupacion) }}
+  {{ form_row(form.papa.empresaTrabajo) }}
+</div>
+{% elseif form.papa is defined and form.papa.vars.block_prefixes | last ==
+'entity' %}
+<div class="form-group mb-3">{{ form_row(form.papa) }}</div>
+{% endif %} {% if form.encargado is defined and
+form.encargado.vars.block_prefixes | last != 'entity' %}
+<div class="familiar-form-group border p-3 mb-3 rounded bg-white">
+  <h3>Datos del Encargado (Editar)</h3>
+  {{ form_row(form.encargado.nombre) }}
+  {{ form_row(form.encargado.apellido) }}
+  {{ form_row(form.encargado.fechaNacimiento) }}
+  {{ form_row(form.encargado.dni) }}
+  {{ form_row(form.encargado.direccion) }}
+  {{ form_row(form.encargado.telefono) }}
+  {{ form_row(form.encargado.email) }}
+  {{ form_row(form.encargado.relacionConPaciente) }}
+  {{ form_row(form.encargado.esPrincipal) }}
+</div>
+{% elseif form.encargado is defined and form.encargado.vars.block_prefixes |
+last == 'entity' %}
+<div class="form-group mb-3">{{ form_row(form.encargado) }}</div>
+{% endif %} {# Contenedor para las pestañas de registro de nuevos familiares #}
+{# Las pestañas se muestran si la opción seleccionada es "new_mama", "new_papa"
+o "new_encargado" #} {% set selectedFamiliarType = form.familiar_tipo.vars.value
+%} {% if selectedFamiliarType == 'new_mama' or selectedFamiliarType ==
+'new_papa' or selectedFamiliarType == 'new_encargado' %}
+<div class="mt-4">
+  <h4>Registrar Nuevo Familiar</h4>
+  <ul class="nav nav-tabs" id="newFamiliarTabs" role="tablist">
+    {% if form.newMama is defined %} {# newMama siempre definido si se
+    seleccionó una opción "new_" #}
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link {% if selectedFamiliarType == 'new_mama' %}active{% endif %}"
+        id="new-mama-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#new-mama"
+        type="button"
+        role="tab"
+        aria-controls="new-mama"
+        aria-selected="{% if selectedFamiliarType == 'new_mama' %}true{% else %}false{% endif %}"
+      >
+        Nueva Mamá
+      </button>
+    </li>
+    {% endif %} {% if form.newPapa is defined %}
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link {% if selectedFamiliarType == 'new_papa' %}active{% endif %}"
+        id="new-papa-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#new-papa"
+        type="button"
+        role="tab"
+        aria-controls="new-papa"
+        aria-selected="{% if selectedFamiliarType == 'new_papa' %}true{% else %}false{% endif %}"
+      >
+        Nuevo Papá
+      </button>
+    </li>
+    {% endif %} {% if form.newEncargado is defined %}
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link {% if selectedFamiliarType == 'new_encargado' %}active{% endif %}"
+        id="new-encargado-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#new-encargado"
+        type="button"
+        role="tab"
+        aria-controls="new-encargado"
+        aria-selected="{% if selectedFamiliarType == 'new_encargado' %}true{% else %}false{% endif %}"
+      >
+        Nuevo Encargado
+      </button>
+    </li>
+    {% endif %}
+  </ul>
+  <div
+    class="tab-content border border-top-0 p-3 rounded-bottom"
+    id="newFamiliarTabContent"
+  >
+    {% if form.newMama is defined %}
+    <div
+      class="tab-pane fade {% if selectedFamiliarType == 'new_mama' %}show active{% endif %}"
+      id="new-mama"
+      role="tabpanel"
+      aria-labelledby="new-mama-tab"
+    >
+      <div class="familiar-form-group pt-2">
+        {{ form_row(form.newMama.nombre) }}
+        {{ form_row(form.newMama.apellido) }}
+        {{ form_row(form.newMama.fechaNacimiento) }}
+        {{ form_row(form.newMama.dni) }}
+        {{ form_row(form.newMama.direccion) }}
+        {{ form_row(form.newMama.telefono) }}
+        {{ form_row(form.newMama.email) }}
+        {{ form_row(form.newMama.ocupacion) }}
+        {{ form_row(form.newMama.estadoCivil) }}
+      </div>
+    </div>
+    {% endif %} {% if form.newPapa is defined %}
+    <div
+      class="tab-pane fade {% if selectedFamiliarType == 'new_papa' %}show active{% endif %}"
+      id="new-papa"
+      role="tabpanel"
+      aria-labelledby="new-papa-tab"
+    >
+      <div class="familiar-form-group pt-2">
+        {{ form_row(form.newPapa.nombre) }}
+        {{ form_row(form.newPapa.apellido) }}
+        {{ form_row(form.newPapa.fechaNacimiento) }}
+        {{ form_row(form.newPapa.dni) }}
+        {{ form_row(form.newPapa.direccion) }}
+        {{ form_row(form.newPapa.telefono) }}
+        {{ form_row(form.newPapa.email) }}
+        {{ form_row(form.newPapa.ocupacion) }}
+        {{ form_row(form.newPapa.empresaTrabajo) }}
+      </div>
+    </div>
+    {% endif %} {% if form.newEncargado is defined %}
+    <div
+      class="tab-pane fade {% if selectedFamiliarType == 'new_encargado' %}show active{% endif %}"
+      id="new-encargado"
+      role="tabpanel"
+      aria-labelledby="new-encargado-tab"
+    >
+      <div class="familiar-form-group pt-2">
+        {{ form_row(form.newEncargado.nombre) }}
+        {{ form_row(form.newEncargado.apellido) }}
+        {{ form_row(form.newEncargado.fechaNacimiento) }}
+        {{ form_row(form.newEncargado.dni) }}
+        {{ form_row(form.newEncargado.direccion) }}
+        {{ form_row(form.newEncargado.telefono) }}
+        {{ form_row(form.newEncargado.email) }}
+        {{ form_row(form.newEncargado.relacionConPaciente) }}
+        {{ form_row(form.newEncargado.esPrincipal) }}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

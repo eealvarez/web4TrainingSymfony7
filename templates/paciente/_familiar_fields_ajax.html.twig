@@ -1,0 +1,62 @@
+{# templates/paciente/_familiar_fields_ajax.html.twig #}
+
+{# All these groups will be hidden by default by JS and only one shown #}
+
+{# Contenedor para los campos de Nueva Mamá #}
+<div id="new-mama-group" class="familiar-group" data-familiar-type="new_mama">
+    <h3 class="mb-3">Registrar Nueva Mamá</h3>
+    {{ form_row(form.newMama) }}
+</div>
+
+{# Contenedor para la lógica de Mamá existente #}
+<div id="existing-mama-group" class="familiar-group" data-familiar-type="existing_mama">
+    {# Renderiza los detalles de la Mamá existente SI existe en el form (si paciente ya tiene una mamá asociada) #}
+    {% if form.mama is defined %} {# Now checking for 'form.mama' #}
+        <h3 class="mb-3">Datos de la Mamá asociada</h3>
+        {{ form_row(form.mama) }} {# This now renders the MamaTypeForm #}
+    {% endif %}
+
+    {# Renderiza el selector SI existe en el form (siempre existe si familiarType es 'existing_mama') #}
+    {% if form.mama_select is defined %}
+        <h3 class="mb-3">{% if form.mama is defined %}Cambiar{% else %}Seleccionar{% endif %} Mamá existente</h3>
+        {{ form_row(form.mama_select) }} {# This renders the EntityType (select) #}
+    {% endif %}
+</div>
+
+{# Repite la misma estructura para Papá y Encargado #}
+
+{# Contenedor para los campos de Nuevo Papá #}
+<div id="new-papa-group" class="familiar-group" data-familiar-type="new_papa">
+    <h3 class="mb-3">Registrar Nuevo Papá</h3>
+    {{ form_row(form.newPapa) }}
+</div>
+
+{# Contenedor para la lógica de Papá existente #}
+<div id="existing-papa-group" class="familiar-group" data-familiar-type="existing_papa">
+    {% if form.papa is defined %} {# Now checking for 'form.papa' #}
+        <h3 class="mb-3">Datos del Papá asociado</h3>
+        {{ form_row(form.papa) }}
+    {% endif %}
+    {% if form.papa_select is defined %}
+        <h3 class="mb-3">{% if form.papa is defined %}Cambiar{% else %}Seleccionar{% endif %} Papá existente</h3>
+        {{ form_row(form.papa_select) }}
+    {% endif %}
+</div>
+
+{# Contenedor para los campos de Nuevo Encargado #}
+<div id="new-encargado-group" class="familiar-group" data-familiar-type="new_encargado">
+    <h3 class="mb-3">Registrar Nuevo Encargado</h3>
+    {{ form_row(form.newEncargado) }}
+</div>
+
+{# Contenedor para la lógica de Encargado existente #}
+<div id="existing-encargado-group" class="familiar-group" data-familiar-type="existing_encargado">
+    {% if form.encargado is defined %} {# Now checking for 'form.encargado' #}
+        <h3 class="mb-3">Datos del Encargado asociado</h3>
+        {{ form_row(form.encargado) }}
+    {% endif %}
+    {% if form.encargado_select is defined %}
+        <h3 class="mb-3">{% if form.encargado is defined %}Cambiar{% else %}Seleccionar{% endif %} Encargado existente</h3>
+        {{ form_row(form.encargado_select) }}
+    {% endif %}
+</div>

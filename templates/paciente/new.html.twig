@@ -3,9 +3,14 @@ endblock %} {% block body %}
 <div class="container my-5">
   <h1 class="text-center mb-4">Registrar Nuevo Paciente</h1>
 
-  {{ form_start(form, {'attr': {'class': 'p-4 border rounded shadow-sm bg-light'
+  {# El ID 'paciente-form' es crucial para el JavaScript #}
+  {{ form_start(form, {'attr': {'class': 'p-4 border rounded shadow-sm bg-light', 'id': 'paciente-form'
 
-  }}) }}
+
+  }}) }} {% if form.id is defined %} {# Check if the 'id' field actually exists
+  in the form view #}
+  {{ form_row(form.id) }}
+  {% endif %}
   <div class="row">
     <div class="col-md-6">
       <h2 class="mb-3">Datos del Paciente</h2>
@@ -24,10 +29,18 @@ endblock %} {% block body %}
       {{ form_row(form.telefono) }}
       {{ form_row(form.email) }}
 
-      <h2 class="mt-4 mb-3">Información Familiar (Opcional)</h2>
-      {{ form_row(form.mama) }}
-      {{ form_row(form.papa) }}
-      {{ form_row(form.encargado) }}
+      <h2 class="mt-4 mb-3">Información Familiar</h2>
+      {{ form_row(form.familiar_tipo) }}
+
+      {# Este contenedor será actualizado por el JavaScript #}
+      <div id="familiar-fields-container">
+        {# Aquí incluimos el fragmento inicial. Cuando la página carga, este
+        fragmento ya tiene los campos correctos. #} {# IMPORTANTE: Asegúrate de
+        que este bloque se renderice en la primera carga si hay un familiar ya
+        asignado (en edición) #} {# o para el estado inicial de "No asignar" en
+        new.html.twig. #} {# {% include 'paciente/_familiar_fields.html.twig'
+        with {'form': form} %} #}
+      </div>
     </div>
   </div>
 
@@ -41,4 +54,102 @@ endblock %} {% block body %}
   </div>
   {{ form_end(form) }}
 </div>
+{% endblock %} {% block javascripts %}
+{{ parent() }}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const familiarTypeSelect = document.getElementById('{{ form.familiar_tipo.vars.id }}');
+      const form = document.getElementById('paciente-form');
+      const familiarContainer = document.getElementById('familiar-fields-container');
+
+      // **IMPORTANTE**: Ocultar todos los grupos de familiar al cargar la página inicialmente
+      // Esto previene que se muestren todos los campos vacíos antes de que el JS tome control.
+      document.querySelectorAll('.familiar-group').forEach(group => {
+          group.style.display = 'none';
+      });
+
+
+      const refreshFamiliarFields = async () => {
+          const selectedType = familiarTypeSelect.value;
+          const url = '{{ path('app_paciente_familiar_fields') }}';
+          const method = 'POST';
+
+          const formData = new FormData(form);
+
+          // Asegúrate de que el ID del paciente se envía si estás en el modo edición.
+          // Esto es crucial para que el controlador pueda rehidratar correctamente el paciente
+          // y sus relaciones existentes para mostrar los 'details' forms.
+          {% if paciente is defined and paciente.id is not null %}
+              formData.append('paciente[id]', '{{ paciente.id }}');
+          {% endif %}
+
+          // Envia el valor actual de familiar_tipo para que el controlador sepa qué añadir
+          formData.set(familiarTypeSelect.name, selectedType);
+
+
+          try {
+              const response = await fetch(url, {
+                  method: method,
+                  body: formData,
+                  headers: {
+                      'X-Requested-With': 'XMLHttpRequest'
+                  }
+              });
+
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+              }
+
+              const data = await response.text();
+              familiarContainer.innerHTML = data; // Reemplaza el contenido del contenedor
+
+              // --- LÓGICA DE VISIBILIDAD DE LOS CAMPOS (después de que el HTML es inyectado) ---
+              // Ocultar todos los grupos de familiar (nuevamente, en caso de que el AJAX traiga más)
+              document.querySelectorAll('.familiar-group').forEach(group => {
+                  group.style.display = 'none';
+              });
+
+              // Mostrar solo el grupo correspondiente al tipo seleccionado
+              const selectedGroup = document.querySelector(`.familiar-group[data-familiar-type="${selectedType}"]`);
+              if (selectedGroup) {
+                  selectedGroup.style.display = 'block';
+              }
+              // --- FIN LÓGICA DE VISIBILIDAD ---
+
+              // Si se seleccionó una opción de "existente" y hay un campo de selección,
+              // podemos añadir un listener para actualizar los detalles si la selección cambia.
+              // (Esto es un paso AVANZADO para una funcionalidad completa de "existente")
+              // Por ahora, si `mama_details` se carga, ya mostrará la data asociada.
+              // Si el usuario cambia el selector, para ver los detalles del *nuevo* seleccionado,
+              // necesitarías hacer otra llamada AJAX aquí o tener un objeto JS con todos los detalles.
+
+              // Ejemplo para el futuro si quieres actualizar los detalles de 'mama_details'
+              // cuando se cambia 'mama_select':
+              /*
+              const mamaSelect = familiarContainer.querySelector('[name*="mama_select"]');
+              if (mamaSelect) {
+                  mamaSelect.addEventListener('change', async function() {
+                      const selectedMamaId = this.value;
+                      if (selectedMamaId) {
+                          // Aquí harías otra petición AJAX para obtener los detalles de la mamá
+                          // con `selectedMamaId` y actualizar el div de `mama_details`
+                          console.log('Mamá seleccionada:', selectedMamaId);
+                          // Esto implicaría una nueva ruta/controlador para obtener detalles de un familiar por ID
+                      }
+                  });
+              }
+              */
+
+          } catch (error) {
+              console.error('Error al actualizar los campos del familiar:', error);
+          }
+      };
+
+      familiarTypeSelect.addEventListener('change', refreshFamiliarFields);
+
+      // Ejecutar al cargar la página para establecer el estado inicial correcto
+      // Esto asegura que solo el grupo correcto se muestre desde el principio.
+      refreshFamiliarFields();
+  });
+</script>
 {% endblock %}

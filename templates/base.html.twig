@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Gestión de Pacientes{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}" />
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>👨‍👩‍👧‍👦</text></svg>"
@@ -16,8 +17,20 @@
       crossorigin="anonymous"
     />
     {% block stylesheets %}{% endblock %} {% block javascripts %}{% endblock %}
+    {{
+      encore_entry_link_tags("app_css")
+    }}
+    {{
+      encore_entry_script_tags("app_js")
+    }}
   </head>
   <body>
+    <div class="sidebar">
+      <h2>Menú</h2>
+      <a href="#">Inicio</a>
+      <a href="#">Perfil</a>
+      <a href="#">Configuración</a>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app_paciente_index') }}">
@@ -56,7 +69,7 @@
     <main role="main" class="flex-shrink-0">
       {% block body %}{% endblock %}
     </main>
-
+    <script src="{{ asset('build/app.js') }}"></script>
     {# Agrega Bootstrap JS (bundle) #}
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -5,12 +5,18 @@ body {
 }
 
 .sidebar {
-  width: 250px;
+  width: 60px; /* Reducido inicialmente */
+  height: 100vh;
   background: linear-gradient(180deg, #060606, #232323);
   color: #00ffcc;
-  padding: 20px;
+  padding: 10px;
   position: fixed;
-  height: 100vh;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar.expanded {
+  width: 250px; /* Se expande */
 }
 
 .sidebar a {
@@ -18,9 +24,15 @@ body {
   text-decoration: none;
   padding: 10px;
   display: block;
+  opacity: 0; /* Oculto cuando está minimizado */
+  transition: opacity 0.2s ease-in-out;
 }
 
 .sidebar a:hover {
   background-color: #00ffcc;
   color: #121212;
+}
+
+.sidebar.expanded a {
+  opacity: 1;
 }

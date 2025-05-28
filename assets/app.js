@@ -1,13 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
   const sidebar = document.querySelector(".sidebar");
-  const toggleButton = document.createElement("button");
+  const togglePin = document.createElement("button");
+  let isPinned = false;
 
-  toggleButton.textContent = "Menú";
-  toggleButton.classList.add("toggle-btn");
+  // Configuración del botón para fijar el menú
+  togglePin.textContent = "Fijar menú";
+  togglePin.classList.add("toggle-pin");
+  document.body.prepend(togglePin);
 
-  toggleButton.addEventListener("click", () => {
-    sidebar.classList.toggle("hidden");
+  togglePin.addEventListener("click", () => {
+    isPinned = !isPinned;
+    togglePin.textContent = isPinned ? "Desfijar menú" : "Fijar menú";
   });
 
-  document.body.prepend(toggleButton);
+  // Expandir el menú al pasar el mouse, si no está fijado
+  sidebar.addEventListener("mouseenter", () => {
+    if (!isPinned) {
+      sidebar.classList.add("expanded");
+    }
+  });
+
+  // Contraer el menú cuando el mouse salga, si no está fijado
+  sidebar.addEventListener("mouseleave", () => {
+    if (!isPinned) {
+      sidebar.classList.remove("expanded");
+    }
+  });
 });
